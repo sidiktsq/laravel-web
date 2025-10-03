@@ -54,9 +54,9 @@ route::get('books/{judul}',function($a){
 });
 
 
-route::get('post/{title}/{category}', function($a,$b){
-    return view('post',['judul' =>$a, 'cat' =>$b]);
-}); 
+// route::get('post/{title}/{category}', function($a,$b){
+//     return view('post',['judul' =>$a, 'cat' =>$b]);
+// }); 
 
 //route optional parameter
 // ditandai dengan?
@@ -144,8 +144,17 @@ route::get('student', [MyController::class, 'siswa']);
 
 // post
 use App\Http\Controllers\PostController;
-route::get('post', [Postcontroller::class, 'index']);
-
 Auth::routes();
-
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+ 
+// post
+route::get('post', [Postcontroller::class, 'index'])->name('post.index');
+// tambah post
+route::get('post/create',[PostController::class, 'create'])->name('post.create');
+route::post('post',[PostController::class, 'store'])->name('post.store');
+// edit data post 
+route::get('post/{id}/edit', [PostController::class,'edit'])->name('post.edit');
+route::put('post/{id}', [PostController::class,'update'])->name('post.update');
+
+// hapus data 
+route::delete('post/{id}', [PostController::class, 'destroy'])->name('post.delete');
