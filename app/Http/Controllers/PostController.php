@@ -36,6 +36,14 @@ class PostController extends Controller
       return redirect()->route('post.create');
     }
   
+     // menampilkan data berdasarkan parameter id
+    public function show($id)
+   {
+    // mencari data post berdasarkan parameter "id"
+    $post = Post::findOrFail($id);
+    return view('post.show' , compact('post'));
+   }
+
     // menampilkan formulir edit data post
     public function edit($id)
    {
@@ -50,7 +58,7 @@ class PostController extends Controller
       $post->content = $request->content;
       $post->save();
       return redirect()->route('post.create');
-   }
+   }  
 
    public function destroy($id){
     // mencari data post berdasarkan parameter 'id'

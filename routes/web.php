@@ -158,3 +158,8 @@ route::put('post/{id}', [PostController::class,'update'])->name('post.update');
 
 // hapus data 
 route::delete('post/{id}', [PostController::class, 'destroy'])->name('post.delete');
+
+// crud
+Route::resource('produk', App\Http\Controllers\ProdukController::class)->middleware('auth');
+use App\Http\Controllers\BiodataController;
+Route::resource('biodata', BiodataController::class);
