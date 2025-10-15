@@ -163,3 +163,28 @@ route::delete('post/{id}', [PostController::class, 'destroy'])->name('post.delet
 Route::resource('produk', App\Http\Controllers\ProdukController::class)->middleware('auth');
 use App\Http\Controllers\BiodataController;
 Route::resource('biodata', BiodataController::class);
+
+// routes/web.php
+use App\Http\Controllers\RelasiController;
+
+Route::get('/one-to-one', [RelasiController::class, 'oneToOne']);
+
+Route::get('/one-to-many', [RelasiController::class, 'oneToMany']);
+
+Route::get('/many-to-many', [RelasiController::class, 'manyToMany']);
+
+Route::get('eloquent', [RelasiController::class, 'eloquent']);
+
+use App\Http\Controllers\DosenController;
+Route::resource('dosen', DosenController::class);
+
+use App\Http\Controllers\HobiController;
+Route::resource('hobi', HobiController::class);
+
+// routes/web.php   
+use App\Models\Wali;
+
+Route::get('/wali-ke-mahasiswa', function () {
+    $wali = Wali::with('mahasiswa')->first();
+    return "{$wali->nama} adalah wali dari {$wali->mahasiswa->nama}";
+});
