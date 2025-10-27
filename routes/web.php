@@ -188,3 +188,6 @@ Route::get('/wali-ke-mahasiswa', function () {
     $wali = Wali::with('mahasiswa')->first();
     return "{$wali->nama} adalah wali dari {$wali->mahasiswa->nama}";
 });
+
+// CRUD One To Many
+Route::resource('mahasiswa', App\Http\Controllers\MahasiswaController::class);
