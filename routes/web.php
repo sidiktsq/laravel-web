@@ -191,3 +191,6 @@ Route::get('/wali-ke-mahasiswa', function () {
 
 // CRUD One To Many
 Route::resource('mahasiswa', App\Http\Controllers\MahasiswaController::class);
+
+// crud wali 
+Route::resource('wali', App\Http\Controllers\WaliController::class);
