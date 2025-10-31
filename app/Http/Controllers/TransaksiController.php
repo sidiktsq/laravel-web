@@ -1,83 +1,66 @@
 <?php
 namespace App\Http\Controllers;
 
+use App\Models\Pelanggan;
 use App\Models\Transaksi;
 use Illuminate\Http\Request;
 
 class TransaksiController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
-        $transaksi = Transaksi::with('transaksi')->get();
-        return view('transaksi.index', compact('transaksi'));
+        $transaksis = Transaksi::with('pelanggan')->get();
+        return view('transaksis.index', compact('transaksis'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create()
     {
-        $transaksi = Transaksi::all();
-        return view('transaksi.create', compact('transaksi'));
+        $pelanggans = Pelanggan::all();
+        return view('transaksis.create', compact('pelanggans'));
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
         $request->validate([
-            'kode_unik'         => 'required',
-            'tanggal_transaksi' => 'required',
-            'pelanggan_id'      => 'required',
-            'total_harga'       => 'required',
+            'kode_transaksi' => 'required|string|max:20|unique:transaksis',
+            'tanggal'        => 'required|date',
+            'pelanggan_id'   => 'required|exists:pelanggans,id',
+            'total_harga'    => 'required|numeric',
         ]);
+
+        Transaksi::create($request->all());
+
+        return redirect()->route('transaksis.index')->with('success', 'Transaksi berhasil ditambahkan');
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
+    public function show(Transaksi $transaksi)
     {
-        $transaksi = Transaksi::findOrFail($id);
-        return view('transaksi.show', compact('transaksi'));
+        return view('transaksis.show', compact('transaksi'));
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
+    public function edit(Transaksi $transaksi)
     {
-        $transaksi = Transaksi::all();
-        return view('transaksi.edit', compact('transaki', 'pelanggan', 'produk'));
+        $pelanggans = Pelanggan::all();
+        return view('transaksis.edit', compact('transaksi', 'pelanggans'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
+    public function update(Request $request, Transaksi $transaksi)
     {
         $request->validate([
-            'kode_unik'         => 'required',
-            'tanggal_transaksi' => 'required',
-            'pelanggan_id'      => 'required',
-            'total_harga'       => 'required',
+            'kode_transaksi' => 'required|string|max:20|unique:transaksis,kode_transaksi,' . $transaksi->id,
+            'tanggal'        => 'required|date',
+            'pelanggan_id'   => 'required|exists:pelanggans,id',
+            'total_harga'    => 'required|numeric',
         ]);
-        $transaksi = Transaksi::findOrFail($id);
+
         $transaksi->update($request->all());
-        return redirect()->route('transaksi.index');
+
+        return redirect()->route('transaksis.index')->with('success', 'Transaksi berhasil diperbarui');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
+    public function destroy(Transaksi $transaksi)
     {
-        $transaksi = Transaksi::findOrFail($id);
         $transaksi->delete();
-        return redirect()->route('transaksi.index');
+        return redirect()->route('transaksis.index')->with('success', 'Transaksi berhasil dihapus');
     }
 }

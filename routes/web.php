@@ -199,3 +199,15 @@ Route::resource('wali', App\Http\Controllers\WaliController::class);
 use App\Http\Controllers\PelangganController;
 
 Route::resource('pelanggan', PelangganController::class);
+
+// 
+use App\Http\Controllers\ProdukController;
+
+Route::resource('produks', ProdukController::class);
+
+
+// 
+use App\Http\Controllers\TransaksiController;
+
+Route::resource('transaksis', TransaksiController::class);
+    

@@ -1,14 +1,17 @@
 <?php
-// app/Models/Hobi.php
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Hobi extends Model
+class Transaksi extends Model
 {
-    protected $fillable = ['kode_unik', 'tanggal_transaksi', 'pelanggan_id','total_transaksi']; 
+    use HasFactory;
+
+    protected $fillable = ['kode_transaksi', 'tanggal', 'pelanggan_id', 'total_harga'];
+
     public function pelanggan()
     {
-        return $this->belongsTo(Pelanggan::class, 'id_pelanggan');
+        return $this->belongsTo(Pelanggan::class);
     }
 }

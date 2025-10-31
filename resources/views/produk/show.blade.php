@@ -2,27 +2,12 @@
 
 @section('content')
 <div class="container">
-    <div class="row justify-content-center">
-        <div class="col-md-8">
-            <div class="card shadow-sm">
-                <div class="card-header d-flex justify-content-between align-items-center">
-                    <span>{{ __('Detail Produk') }}</span>
-                    <a href="{{ route('produk.index') }}" class="btn btn-sm btn-outline-primary">Kembali</a>
-                </div>
+    <h2>Detail Produk</h2>
+    <p><strong>ID:</strong> {{ $produk->id }}</p>
+    <p><strong>Nama Produk:</strong> {{ $produk->nama_produk }}</p>
+    <p><strong>Harga:</strong> Rp {{ number_format($produk->harga, 2) }}</p>
+    <p><strong>Stok:</strong> {{ $produk->stok }}</p>
 
-                <div class="card-body">
-                    @if ($produk->image)
-                    <img src="{{ Storage::url($produk->image)  }}" class="w-100 rounded mb-3" alt="{{ $produk->nama }}">
-                    @else
-                    <img src="{{ asset('images/no-image.png') }}" class="w-100 rounded mb-3" alt="No Image">
-                    @endif
-
-                    <h4 class="fw-bold">{{ $produk->nama }}</h4>
-                    <p class="mt-2 mb-1">Harga: <strong>Rp{{ number_format($produk->harga, 0, ',', '.') }}</strong></p>
-                    <p class="mt-2">{!! $produk->deskripsi !!}</p>
-                </div>
-            </div>
-        </div>
-    </div>
+    <a href="{{ route('produks.index') }}" class="btn btn-secondary">Kembali</a>
 </div>
 @endsection
