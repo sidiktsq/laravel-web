@@ -65,7 +65,7 @@ class WaliController extends Controller
         $validate = $request->validate(
             [
                 'nama'         => 'required',
-                'id_mahasiswa' => 'required|exists:id_mahasiswas',
+                'id_mahasiswa' => 'required|exists:id_mahasiswas    ',
             ]
         );
 

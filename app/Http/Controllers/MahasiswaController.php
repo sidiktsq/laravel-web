@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 use App\Models\Dosen;
+use App\Models\Hobi;
 use App\Models\Mahasiswa;
 use Illuminate\Http\Request;
+
 
 class MahasiswaController extends Controller
 {
@@ -22,7 +24,8 @@ class MahasiswaController extends Controller
     public function create()
     {
         $dosen = Dosen::all();
-        return view('mahasiswa.create', compact('dosen'));
+        $hobi =Hobi::all();
+        return view('mahasiswa.create', compact('dosen' , 'hobi'));
     }
 
     /**
@@ -32,7 +35,7 @@ class MahasiswaController extends Controller
     {
         $validated = $request->validate([
             'nama'=>'required',
-            'nim'=>'required|unique:mahasiswas',
+            'nim'=>'required|',
             'id_dosen'=> 'required|exists:dosens,id',
 
         ]);
@@ -42,6 +45,8 @@ class MahasiswaController extends Controller
           $mahasiswa->nim = $request->nim;
           $mahasiswa->id_dosen = $request->id_dosen;
           $mahasiswa->save();
+        //attach
+        $mahasiswa->hobis()->attach($request->hobi);
           return redirect()->route('mahasiswa.index');
 
     }
@@ -62,7 +67,8 @@ class MahasiswaController extends Controller
     {
         $mahasiswa = Mahasiswa::findOrFail($id);
         $dosen = Dosen::all();
-        return view('mahasiswa.edit', compact('mahasiswa','dosen'));
+        $hobi=Hobi::all();
+        return view('mahasiswa.edit', compact('mahasiswa','dosen','hobi'));
 
     }
 
@@ -83,6 +89,8 @@ class MahasiswaController extends Controller
     $mahasiswa->nim      = $request->nim;
     $mahasiswa->id_dosen = $request->id_dosen;
     $mahasiswa->save();
+    //sync (memperbarui data yang di ubah dari many to many)
+    $mahasiswa->hobis()->sync($request->hobi);
     return redirect()->route('mahasiswa.index');
 
     }
@@ -93,6 +101,9 @@ class MahasiswaController extends Controller
     public function destroy(string $id)
     {
        $mahasiswa = Mahasiswa::findOrFail($id);
+       //detach (menghapius data yang terkait dari mahasiswa dan hobi)
+        //  menghapus data di relasi table pivot 
+       $mahasiswa->hobis()->detach();
         $mahasiswa->delete();
         return redirect()->route('mahasiswa.index');
     }
