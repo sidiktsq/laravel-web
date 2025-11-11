@@ -6,56 +6,90 @@ use Illuminate\Http\Request;
 
 class ProdukController extends Controller
 {
+
     public function index()
     {
-        $produk = Produk::all();
-        return view('produks.index', compact('produks'));
+        $produk = Produk::latest()->paginate(5);
+        return view('latihan.produk.index', compact('produk'));
     }
 
     public function create()
     {
-        return view('produks.create');
+        return view('latihan.produk.create');
     }
 
     public function store(Request $request)
     {
-        $request->validate([
-            'nama_produk' => 'required|string|max:100',
-            'harga'       => 'required|numeric',
-            'stok'        => 'required|integer',
+        //validate form
+        $validated = $request->validate([
+            'nama_produk' => 'required|min:5',
+            'harga'       => 'required',
+            'stok'        => 'required|',
         ]);
 
-        Produk::create($request->all());
+        $produk              = new Produk();
+        $produk->nama_produk = $request->nama_produk;
+        $produk->harga       = $request->harga;
+        $produk->stok        = $request->stok;
+        // upload image
+        // if ($request->hasFile('image')) {
+        //     $file       = $request->file('image');
+        //     $randomName = Str::random(20) . '.' . $file->getClientOriginalExtension();
+        //     $path       = $file->storeAs('produks', $randomName, 'public');
+        //     // memasukan nama_produk image nya ke database
+        //     $produk->image = $path;
+        // }
 
-        return redirect()->route('produks.index')->with('success', 'Produk berhasil ditambahkan');
+        $produk->save();
+        return redirect()->route('produk.index');
     }
 
-    public function show(Produk $produk)
+    public function show($id)
     {
-        return view('produks.show', compact('produk'));
+        $produk = Produk::findOrFail($id);
+        return view('latihan.produk.show', compact('produk'));
     }
 
-    public function edit(Produk $produk)
+    public function edit($id)
     {
-        return view('produks.edit', compact('produk'));
+        $produk = Produk::findOrFail($id);
+        return view('latihan.produk.edit', compact('produk'));
     }
 
-    public function update(Request $request, Produk $produk)
+    public function update(Request $request, $id)
     {
-        $request->validate([
-            'nama_produk' => 'required|string|max:100',
-            'harga'       => 'required|numeric',
-            'stok'        => 'required|integer',
+        $validated = $request->validate([
+            'nama_produk' => 'required|min:5',
+            'harga'       => 'required',
+            'stok'        => 'required|',
         ]);
 
-        $produk->update($request->all());
+        $produk              = Produk::findOrFail($id);
+        $produk->nama_produk = $request->nama_produk;
+        $produk->harga       = $request->harga;
+        $produk->stok        = $request->stok;
+        // if ($request->hasFile('image')) {
+        //     // menghapus foto lama
+        //     Storage::disk('public')->delete($produk->image);
 
-        return redirect()->route('produks.index')->with('success', 'Produk berhasil diperbarui');
+        //     // upload foto baru
+        //     $file       = $request->file('image');
+        //     $randomName = Str::random(20) . '.' . $file->getClientOriginalExtension();
+        //     $path       = $file->storeAs('produks', $randomName, 'public');
+        //     // memasukan nama_produk image nya ke database
+        //     $produk->image = $path;
+        // }
+        $produk->save();
+        return redirect()->route('produk.index');
+
     }
 
-    public function destroy(Produk $produk)
+    public function destroy($id)
     {
+        $produk = Produk::findOrFail($id);
+        // Storage::disk('public')->delete($produk->image);
         $produk->delete();
-        return redirect()->route('produks.index')->with('success', 'Produk berhasil dihapus');
+        return redirect()->route('produk.index');
+
     }
 }
